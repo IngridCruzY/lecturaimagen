@@ -3,6 +3,8 @@ package org.example.controller;
 import net.sourceforge.tess4j.TesseractException;
 import org.example.service.OcrService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,24 +20,13 @@ public class OcrController {
     @Autowired
     private OcrService ocrService;
 
-    /*
     @PostMapping("/image-text")
-    public String extractTextFromImage(@RequestParam("file") MultipartFile file) {
+    public  ResponseEntity<String> extractTextFromImage(@RequestParam("file") MultipartFile file) {
         try {
-            return ocrService.extractTextFromImage(file);
+            String extractedText = ocrService.extractTextFromImage(file);
+            return new ResponseEntity<>(extractedText, HttpStatus.OK);
         } catch (IOException | TesseractException | URISyntaxException e) {
-            return "Error al procesar la imagen: " + e.getMessage();
-        }
-    }
-
-     */
-
-    @PostMapping("/image2-text")
-    public String extractTextFromImage2(@RequestParam("file") MultipartFile file) {
-        try {
-            return ocrService.extractTextFromImage2(file);
-        } catch (IOException | TesseractException | URISyntaxException e) {
-            return "Error al procesar la imagen de Yape: " + e.getMessage();
+            return new ResponseEntity<>("Error al procesar la imagen: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
